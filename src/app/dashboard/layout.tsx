@@ -1,21 +1,29 @@
-import React, { FC, ReactNode } from "react";
+"use client";
+import React, { FC, ReactNode, useState } from "react";
 import AppSidebar from "@/components/app-sidebar";
 import AppHeadbar from "@/components/app-headbar";
+import UploadDoc from "@/components/upload-doc";
 
 interface Props {
 	children: ReactNode;
 }
 
-const layout: FC<Props> = ({ children }) => {
+const Layout: FC<Props> = ({ children }) => {
+	const [open, setOpen] = useState<boolean>(false);
+
+	const handleDialog = () => {
+		setOpen((prev) => !prev);
+	};
 	return (
 		<div className="flex h-screen w-full">
-			<AppSidebar />
+			<AppSidebar openUpload={handleDialog} />
+			<UploadDoc open={open} handleOpen={handleDialog} />
 			<div className="flex w-auto flex-1 flex-col">
 				<AppHeadbar />
-				<main>{children}</main>
+				<main className="flex flex-1 flex-col">{children}</main>
 			</div>
 		</div>
 	);
 };
 
-export default layout;
+export default Layout;
