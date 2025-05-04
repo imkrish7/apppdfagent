@@ -113,10 +113,24 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+	* {
+		@apply border-border outline-ring/50;
 	}
-  body {
-    @apply bg-background text-foreground;
+	body {
+		@apply bg-background text-foreground;
 	}
+}
+
+.login {
+	background-image: url("/login.jpg");
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.robot {
+	background-image: url("/robot.png");
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
 }
