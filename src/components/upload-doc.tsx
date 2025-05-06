@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useTransition } from "react";
 import {
 	Dialog,
 	DialogContent,
@@ -10,6 +10,7 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { uploadDoc } from "@/actions/upload";
 
 interface Props {
 	open: boolean;
@@ -17,6 +18,13 @@ interface Props {
 }
 
 const UploadDoc: FC<Props> = ({ open, handleOpen }) => {
+	const [isPending, startTransition] = useTransition();
+	const handleSubmit = (formdata: FormData) => {
+		startTransition(async () => {
+			const response = await uploadDoc(formdata);
+			console.log(response);
+		});
+	};
 	return (
 		<Dialog open={open} onOpenChange={handleOpen}>
 			<DialogContent>
@@ -30,44 +38,50 @@ const UploadDoc: FC<Props> = ({ open, handleOpen }) => {
 						</span>
 					</DialogDescription>
 				</DialogHeader>
-				<div className="grid gap-4 py-4">
-					<div className="grid-row-2 grid gap-2">
-						<Label className="text-md text-bold text-zinc-600">
-							Title
-						</Label>
-						<Input
-							name="title"
-							placeholder="Enter title"
-							className="placeholder:text-zinc-300"
-						/>
+				<form action={handleSubmit}>
+					<div className="grid gap-4 py-4">
+						<div className="grid-row-2 grid gap-2">
+							<Label className="text-md text-bold text-zinc-600">
+								Title
+							</Label>
+							<Input
+								name="title"
+								placeholder="Enter title"
+								className="placeholder:text-zinc-300"
+							/>
+						</div>
+						<div className="grid-row-2 grid gap-2">
+							<Label className="text-md text-bold text-zinc-600">
+								Author
+							</Label>
+							<Input
+								name="author"
+								placeholder="Enter author(optional)"
+								className="placeholder:text-zinc-300"
+							/>
+						</div>
+						<div className="grid-row-2 grid gap-2">
+							<Label className="text-md text-bold text-zinc-600">
+								Add Doc
+							</Label>
+							<Input
+								name="doc"
+								placeholder="Select a file"
+								type="file"
+								className="placeholder:text-indigo-300"
+							/>
+						</div>
 					</div>
-					<div className="grid-row-2 grid gap-2">
-						<Label className="text-md text-bold text-zinc-600">
-							Author
-						</Label>
-						<Input
-							name="author"
-							placeholder="Enter author(optional)"
-							className="placeholder:text-zinc-300"
-						/>
-					</div>
-					<div className="grid-row-2 grid gap-2">
-						<Label className="text-md text-bold text-zinc-600">
-							Add Doc
-						</Label>
-						<Input
-							name="doc"
-							placeholder="Select a file"
-							type="file"
-							className="placeholder:text-indigo-300"
-						/>
-					</div>
-				</div>
-				<DialogFooter>
-					<Button type="submit" className="bg-indigo-400">
-						Upload
-					</Button>
-				</DialogFooter>
+					<DialogFooter>
+						<Button
+							disabled={isPending}
+							type="submit"
+							className="bg-indigo-400"
+						>
+							Upload
+						</Button>
+					</DialogFooter>
+				</form>
 			</DialogContent>
 		</Dialog>
 	);
