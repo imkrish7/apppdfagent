@@ -29,7 +29,7 @@ const AppSidebar: FC<Props> = ({ openUpload }) => {
 			)}
 		>
 			<div className="border-b border-gray-200/50 p-4">
-				<span className="text-xl font-bold text-violet-400">
+				<span className="text-2xl font-bold text-gray-600">
 					DOC Agent
 				</span>
 			</div>
