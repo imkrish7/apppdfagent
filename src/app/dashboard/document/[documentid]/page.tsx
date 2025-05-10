@@ -1,4 +1,6 @@
 import ChatInterface from "@/components/chat-interface";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const DocumentChat = async ({
 	params,
@@ -9,7 +11,9 @@ const DocumentChat = async ({
 
 	return (
 		<div className="flex h-full flex-col">
-			<ChatInterface documentid={documentid} />
+			<Suspense fallback={<Loading />}>
+				<ChatInterface documentid={documentid} />
+			</Suspense>
 		</div>
 	);
 };

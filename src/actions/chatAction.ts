@@ -1,31 +1,13 @@
 import { api } from "@/lib/api";
+import { IChat, IMessage } from "@/types/chat";
 
-export const getDocs = async (filter: string = "all") => {
+export const saveChatAction = async (chat: IChat, documentId: string) => {
 	try {
 		const accessToken = localStorage.getItem("access_token");
 		const response = await api({
-			url: "/documents",
-			method: "GET",
-			params: {
-				status: filter,
-			},
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
-		return response;
-	} catch (error) {
-		console.error(error);
-		return null;
-	}
-};
-
-export const deleteDocAction = async (documentId: string) => {
-	try {
-		const accessToken = localStorage.getItem("access_token");
-		const response = await api({
-			url: `/documents/${documentId}`,
-			method: "DELETE",
+			url: `/chats/${documentId}`,
+			method: "POST",
+			data: chat,
 			headers: {
 				Authorization: `Bearer ${accessToken}`,
 			},
@@ -34,5 +16,21 @@ export const deleteDocAction = async (documentId: string) => {
 	} catch (error) {
 		console.error(error);
 		throw error;
+	}
+};
+
+export const getChatsAction = async (documentId: string) => {
+	try {
+		const accessToken = localStorage.getItem("access_token");
+		const response = await api<IMessage[]>({
+			url: `/chats/${documentId}`,
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
+		return response;
+	} catch (error) {
+		console.error(error);
 	}
 };

@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import React, { FC, useEffect, useState, useTransition } from "react";
 import { Button } from "./ui/button";
 import { PlusIcon } from "lucide-react";
 import { getDocs } from "@/actions/documents";
 import { UploadedDocument } from "@/types/documents";
+import DocumentRow from "./document-row";
 
 interface Props {
 	openUpload: () => void;
@@ -21,6 +21,7 @@ const AppSidebar: FC<Props> = ({ openUpload }) => {
 			}
 		});
 	}, []);
+
 	return (
 		<div
 			className={cn(
@@ -49,18 +50,7 @@ const AppSidebar: FC<Props> = ({ openUpload }) => {
 			<div className="scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent flex-1 space-y-2.5 overflow-y-auto p-4">
 				<div className="flex flex-col gap-2">
 					{documents.map((doc) => {
-						return (
-							<Link
-								key={doc._id}
-								href={`/dashboard/document/${doc._id}`}
-							>
-								<div className="rounded px-2 py-1 hover:bg-gray-200">
-									<span className="white-space overflow-hidden font-[monospace] text-clip text-ellipsis text-gray-500">
-										{doc.title}
-									</span>
-								</div>
-							</Link>
-						);
+						return <DocumentRow key={doc._id} doc={doc} />;
 					})}
 				</div>
 			</div>

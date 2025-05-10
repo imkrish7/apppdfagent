@@ -11,6 +11,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { uploadDoc } from "@/actions/upload";
+import { toast } from "sonner";
 
 interface Props {
 	open: boolean;
@@ -21,8 +22,15 @@ const UploadDoc: FC<Props> = ({ open, handleOpen }) => {
 	const [isPending, startTransition] = useTransition();
 	const handleSubmit = (formdata: FormData) => {
 		startTransition(async () => {
-			const response = await uploadDoc(formdata);
-			console.log(response);
+			try {
+				const response = await uploadDoc(formdata);
+				if (response) {
+					toast.success("Account uploaded!");
+				}
+			} catch (error) {
+				console.error(error);
+				toast.error("Upload failed please try again");
+			}
 		});
 	};
 	return (
