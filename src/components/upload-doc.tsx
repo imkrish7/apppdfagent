@@ -12,20 +12,23 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { uploadDoc } from "@/actions/upload";
 import { toast } from "sonner";
+import { UploadedDocument } from "@/types/documents";
 
 interface Props {
 	open: boolean;
 	handleOpen: () => void;
+	addDoc: (doc: UploadedDocument) => void;
 }
 
-const UploadDoc: FC<Props> = ({ open, handleOpen }) => {
+const UploadDoc: FC<Props> = ({ open, handleOpen, addDoc }) => {
 	const [isPending, startTransition] = useTransition();
 	const handleSubmit = (formdata: FormData) => {
 		startTransition(async () => {
 			try {
 				const response = await uploadDoc(formdata);
 				if (response) {
-					toast.success("Account uploaded!");
+					toast.success("Document uploaded!");
+					addDoc(response.data);
 				}
 			} catch (error) {
 				console.error(error);
@@ -33,8 +36,11 @@ const UploadDoc: FC<Props> = ({ open, handleOpen }) => {
 			}
 		});
 	};
+	const toggleOpen = () => {
+		handleOpen();
+	};
 	return (
-		<Dialog open={open} onOpenChange={handleOpen}>
+		<Dialog open={open} onOpenChange={toggleOpen}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle className="text-bold text-2xl text-indigo-500">

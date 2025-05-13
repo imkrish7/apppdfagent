@@ -2,14 +2,17 @@ import { deleteDocAction } from "@/actions/documents";
 import { UploadedDocument } from "@/types/documents";
 import { Trash2Icon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { FC, useTransition } from "react";
 import { toast } from "sonner";
 
 interface Props {
 	doc: UploadedDocument;
+	deleteDoc: (documentId: string) => void;
 }
 
-const DocumentRow: FC<Props> = ({ doc }) => {
+const DocumentRow: FC<Props> = ({ doc, deleteDoc }) => {
+	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 	const handleDelete = () => {
 		startTransition(async () => {
@@ -17,6 +20,8 @@ const DocumentRow: FC<Props> = ({ doc }) => {
 				const response = await deleteDocAction(doc._id);
 				if (response) {
 					toast.success("Document delete successfully");
+					deleteDoc(doc._id);
+					router.replace("/dashboard");
 				}
 			} catch (error) {
 				console.error(error);

@@ -1,26 +1,20 @@
 import { cn } from "@/lib/utils";
-import React, { FC, useEffect, useState, useTransition } from "react";
+import React, { FC, memo } from "react";
 import { Button } from "./ui/button";
 import { PlusIcon } from "lucide-react";
-import { getDocs } from "@/actions/documents";
 import { UploadedDocument } from "@/types/documents";
 import DocumentRow from "./document-row";
 
 interface Props {
 	openUpload: () => void;
+	documents: UploadedDocument[];
+	deleteDoc: (documentId: string) => void;
 }
 
-const AppSidebar: FC<Props> = ({ openUpload }) => {
-	const [, startTransition] = useTransition();
-	const [documents, setDocuments] = useState<UploadedDocument[]>([]);
-	useEffect(() => {
-		startTransition(async () => {
-			const response = await getDocs();
-			if (response?.data) {
-				setDocuments(response?.data);
-			}
-		});
-	}, []);
+const AppSidebar: FC<Props> = ({ openUpload, documents, deleteDoc }) => {
+	const toggleDialog = () => {
+		openUpload();
+	};
 
 	return (
 		<div
@@ -40,7 +34,7 @@ const AppSidebar: FC<Props> = ({ openUpload }) => {
 				<Button
 					variant={"outline"}
 					className="text-bold text-md w-full cursor-pointer text-slate-500"
-					onClick={openUpload}
+					onClick={toggleDialog}
 				>
 					<PlusIcon className="h-4 w-4" />
 					Upload a doc
@@ -50,7 +44,13 @@ const AppSidebar: FC<Props> = ({ openUpload }) => {
 			<div className="scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent flex-1 space-y-2.5 overflow-y-auto p-4">
 				<div className="flex flex-col gap-2">
 					{documents.map((doc) => {
-						return <DocumentRow key={doc._id} doc={doc} />;
+						return (
+							<DocumentRow
+								deleteDoc={deleteDoc}
+								key={doc._id}
+								doc={doc}
+							/>
+						);
 					})}
 				</div>
 			</div>
@@ -58,4 +58,4 @@ const AppSidebar: FC<Props> = ({ openUpload }) => {
 	);
 };
 
-export default AppSidebar;
+export default memo(AppSidebar);
